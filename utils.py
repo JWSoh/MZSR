@@ -31,6 +31,16 @@ def load(saver, sess, checkpoint_dir, folder):
         print("=================== Fail to find a Checkpoint ====================")
         return False, 0
 
+
+def save(saver, sess, checkpoint_dir, trial, step):
+    model_name='model'
+    checkpoint = os.path.join(checkpoint_dir, 'Model%d'% trial)
+
+    if not os.path.exists(checkpoint):
+        os.makedirs(checkpoint)
+
+    saver.save(sess, os.path.join(checkpoint, model_name), global_step=step)
+
 def count_param(scope=None):
     N=np.sum([np.prod(v.get_shape().as_list()) for v in tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope)])
     print('Model Params: %d K' % (N/1000))

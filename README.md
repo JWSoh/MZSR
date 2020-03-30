@@ -63,7 +63,11 @@ The number between parantheses of our methods (MZSR) denote the number of gradie
 
 <p align="center"><img src="figure/resultx4.png" width="900"></p>
 
-**We will later provide the test input data**
+**Test Input Data**
+
+Degraded Images of Set5, B100, Urban100 on various kernel environments.
+
+[Download](https://drive.google.com/open?id=16L961dGynkraoawKE2XyiCh4pdRS-e4Y)
 
 ## Visualized Results
 
@@ -76,14 +80,15 @@ The number between parantheses of our methods (MZSR) denote the number of gradie
 ```
 ├── GT: Ground-truth images
 ├── Input: Input LR images
-├── Model: Pre-trained models are included
+├── Model: Pre-trained models are included (Model Zoo)
     ├──> Directx2: Model for direct subsampling (x2)
     ├──> Multi-scale: Multi-scale model
     ├──> Bicubicx2: Model for bicubic subsampling (x2)
     └──> Directx4: Model for direct subsampling (x4)
+├── Pretrained: Pre-trained model (bicubic) for transfer learning.
 └── results: Output results are going to be saved here.
 
-Rest codes are for the test of MZSR.
+Rest codes are for the training and test of MZSR.
 ```
 
 ## Guidelines for Codes
@@ -94,6 +99,32 @@ Clone this repo.
 ```
 git clone http://github.com/JWSoh/MZSR.git
 cd MZSR/
+```
+
+### Training
+
+Download training dataset [DIV2K](https://data.vision.ee.ethz.ch/cvl/DIV2K/).
+
+#### Generate TFRecord dataset
+- Refer to [MainSR](https://www.github.com/JWSoh/MainSR) repo.
+- Modify generate_TFRecord.py in accordance with MZSR.
+
+You only need the ground-truth patches.
+1. Remove 'label' key in 'write_to_tfrecord()' function.
+2. Remove all contents regarding low-resolution images in the 'generate_TFRecord()' function.
+3. Change the patch size with 64X64.
+
+#### Train MZSR
+Make sure all configurations in **config.py** are set.
+
+[Options]
+```
+python main.py --train --gpu [GPU_number] --trial [Trial of your training] --step [Global step]
+
+--train: Flag in order to train.
+--gpu: If you have more than one gpu in your computer, the number denotes the index. [Default 0]
+--trial: Trial number. Any integer numbers can be used. [Default 0]
+--step: Global step. When you resume the training, you need to specify the right global step. [Default 0]
 ```
 
 ### Test
@@ -138,7 +169,19 @@ python main.py --gpu 0 --inputpath Input/g20/Set5/ --gtpath GT/Set5/ --savepath 
 
 ## Citation
 ```
-Will be updated soon.
+@article{soh2020meta,
+  title={Meta-Transfer Learning for Zero-Shot Super-Resolution},
+  author={Soh, Jae Woong and Cho, Sunwoo and Cho, Nam Ik},
+  journal={arXiv preprint arXiv:2002.12213},
+  year={2020}
+}
+
+@inproceedings{soh2020meta,
+  title={Meta-Transfer Learning for Zero-Shot Super-Resolution},
+  author={Soh, Jae Woong and Cho, Sunwoo and Cho, Nam Ik},
+  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  year={2020}
+}
 ```
 
 ## Acknowledgement
