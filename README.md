@@ -107,12 +107,7 @@ Download training dataset [DIV2K](https://data.vision.ee.ethz.ch/cvl/DIV2K/).
 
 #### Generate TFRecord dataset
 - Refer to [MainSR](https://www.github.com/JWSoh/MainSR) repo.
-- Modify generate_TFRecord.py in accordance with MZSR.
-
-You only need the ground-truth patches.
-1. Remove 'label' key in 'write_to_tfrecord()' function.
-2. Remove all contents regarding low-resolution images in the 'generate_TFRecord()' function.
-3. Change the patch size with 64X64.
+- Run generate_TFRecord_MZSR.py
 
 #### Train MZSR
 Make sure all configurations in **config.py** are set.
