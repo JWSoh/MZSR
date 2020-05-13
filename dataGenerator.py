@@ -51,11 +51,11 @@ class dataGenerator(object):
 
     '''Load TFRECORD'''
     def _parse_function(self, example_proto):
-        keys_to_features = {'image': tf.FixedLenFeature([], tf.string)}
+        keys_to_features = {'label': tf.FixedLenFeature([], tf.string)}
 
         parsed_features = tf.parse_single_example(example_proto, keys_to_features)
 
-        img = parsed_features['image']
+        img = parsed_features['label']
         img = tf.divide(tf.cast(tf.decode_raw(img, tf.uint8), tf.float32), 255.)
         img = tf.reshape(img, [self.HEIGHT, self.WIDTH, self.CHANNEL])
 
