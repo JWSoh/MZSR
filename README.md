@@ -1,10 +1,10 @@
 # MZSR
 
-# [Meta-Transfer Learning for Zero-Shot Super-Resolution](https://arxiv.org/abs/2002.12213) (Accepted for CVPR 2020)
+# [Meta-Transfer Learning for Zero-Shot Super-Resolution](https://openaccess.thecvf.com/content_CVPR_2020/html/Soh_Meta-Transfer_Learning_for_Zero-Shot_Super-Resolution_CVPR_2020_paper.html) CVPR 2020
 
 Jae Woong Soh, Sunwoo Cho, and Nam Ik Cho
 
-[[Arxiv](https://arxiv.org/abs/2002.12213)]
+[[Paper](https://openaccess.thecvf.com/content_CVPR_2020/papers/Soh_Meta-Transfer_Learning_for_Zero-Shot_Super-Resolution_CVPR_2020_paper.pdf)] [[Supplementary](https://openaccess.thecvf.com/content_CVPR_2020/supplemental/Soh_Meta-Transfer_Learning_for_CVPR_2020_supplemental.pdf)] [[Arxiv](https://arxiv.org/abs/2002.12213)]
 
 ## Environments
 - Ubuntu 18.04
@@ -162,6 +162,12 @@ self.back_projection_iters=4	-> The number of iteration of back projection.
 python main.py --gpu 0 --inputpath Input/g20/Set5/ --gtpath GT/Set5/ --savepath results/Set5 --kernelpath Input/g20/kernel.mat --model 0 --num 1
 ```
 
+
+### Extra: Codes for Large-Scale Pretraining
+
+Please refer to the folder [**Large-Scale_Training**](https://github.com/JWSoh/MZSR/tree/master/Large-Scale_Training).
+
+
 ## Citation
 ```
 @article{soh2020meta,
@@ -174,7 +180,8 @@ python main.py --gpu 0 --inputpath Input/g20/Set5/ --gtpath GT/Set5/ --savepath 
 @inproceedings{soh2020meta,
   title={Meta-Transfer Learning for Zero-Shot Super-Resolution},
   author={Soh, Jae Woong and Cho, Sunwoo and Cho, Nam Ik},
-  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages={3516--3525},
   year={2020}
 }
 ```
