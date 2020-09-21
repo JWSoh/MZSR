@@ -2,10 +2,9 @@ import time
 import model
 from imresize import imresize
 from utils import *
-from gkernel import generate_kernel
 
 class Train(object):
-    def __init__(self, trial, step, size, batch_size, learning_rate, max_epoch, tfrecord_path, checkpoint_dir, scale,num_of_data, conf):
+    def __init__(self, trial, step, size, batch_size, learning_rate, max_epoch, tfrecord_path, checkpoint_dir, scale,num_of_data, conf, model_num):
 
         print('Initialize Training')
         self.trial=trial
@@ -21,19 +20,21 @@ class Train(object):
         self.scale= scale
         self.num_of_data=num_of_data
         self.conf=conf
+        self.model_num=model_num
 
-        self.label, self.input = self.load_tfrecord()
+        self.input = tf.placeholder(dtype=tf.float32,shape=[None,None,None,self.CHANNEL])
+        self.label = tf.placeholder(dtype=tf.float32,shape=[None,None,None,self.CHANNEL])
 
         self.MODEL = model.MODEL('MODEL')
         self.PARAM = model.Weights('MODEL')
         self.MODEL.forward(self.input, self.PARAM.weights)
-
 
     def calc_loss(self):
         self.loss=tf.losses.absolute_difference(self.MODEL.output , self.label)
 
     def run(self):
         print('Setting Train Configuration')
+
         self.calc_loss()
 
         '''Learning rate and the optimizer'''
@@ -54,6 +55,8 @@ class Train(object):
         '''Training'''
         self.saver = tf.train.Saver(max_to_keep=10000)
         self.init = tf.global_variables_initializer()
+
+        label_train, input_train = self.load_tfrecord()
 
         count_param()
 
@@ -78,17 +81,27 @@ class Train(object):
             num_of_batch = self.num_of_data // self.BATCH_SIZE
             s_epoch = (step * self.BATCH_SIZE) // self.num_of_data
 
+
             epoch=s_epoch
             while True:
                 try:
-                    sess.run(self.opt)
+                    label_train_, input_train_ = sess.run([label_train, input_train])
+
+                    input_bic_=np.zeros(label_train_.shape)
+
+                    for idx in range(len(label_train_)):
+                        input_bic_[idx]=imresize(input_train_[idx], scale=self.scale, kernel='cubic')
+
+
+                    sess.run(self.opt, feed_dict={self.input: input_bic_, self.label: label_train_})
 
                     step = step + 1
 
                     if step % 1000 == 0:
                         t1 = t2
                         t2 = time.time()
-                        loss_, summary = sess.run([self.loss, self.summary_op])
+                        loss_, summary = sess.run([self.loss, self.summary_op],
+                            feed_dict={self.input: input_bic_, self.label: label_train_})
 
                         print('Iteration:', step, 'Loss:', loss_, 'LR:', sess.run(self.lr), 'Time: %.2f' % (t2-t1))
 
